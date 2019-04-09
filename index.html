@@ -1,0 +1,623 @@
+
+<html>
+<head>
+<title>SoundNet: Learning Sound Representations from Unlabeled Video - MIT</title>
+<meta name="google-site-verification" content="NksNPfO4SApMtvU2rGHxr4DPan2Uy6Pz-rP9cA0k1mg" />
+<script src='https://code.jquery.com/jquery-2.2.0.min.js'></script>
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-17813713-5', 'auto');
+ga('create', 'UA-17813713-3', 'mit.edu');
+ga('send', 'pageview');
+
+</script>
+
+<style>
+@media screen and (max-device-width: 480px){
+body{
+-webkit-text-size-adjust: 100%;
+}
+}
+body
+{
+font-family : Arial;
+font-size : 16px;
+background-color : #f2f2f2;
+}
+.content
+{
+width : 800px;
+padding : 25px 25px;
+margin : 25px auto;
+background-color : #fff;
+border-radius: 20px;
+border : #e3e1e4 1px solid;
+}
+.content-title {
+color : #000;
+border : none;
+margin-top : 25px;
+padding-bottom : 0;
+margin-bottom : 0;
+background-color : inherit;
+}
+
+.content-names {
+padding : 10px;
+padding-top : 0;
+border : none;
+box-shadow : none;
+background-color : inherit;
+}
+
+a, a:visited
+{
+color : #002a6d;
+color : blue;
+}
+
+#authors
+{
+text-align : center;
+}
+
+#conference
+{
+text-align : center;
+font-style : italic;
+}
+
+#authors span
+{
+margin : 0 10px;
+}
+
+h1
+{
+text-align : center;
+font-family : Arial;
+font-size : 40px;
+}
+h2 {
+font-family : Arial;
+font-size : 30px;
+padding : 0; margin : 10px;
+}
+h3 {
+font-family : Arial;
+font-size : 20px;
+padding : 0; margin : 10px;
+}
+
+p {
+line-height : 130%;
+margin : 10px;
+}
+pre {
+line-height : 130%;
+margin : 10px;
+padding : 20px;
+background-color : #2d2d2d;
+color : white;
+border-radius : 5px;
+}
+
+li {
+margin : 10px 0;
+}
+
+.samples {
+float : left;
+width : 50%;
+text-align : center;
+}
+.cond {
+float : left;
+margin : 0 40px;
+}
+.cond-container {
+width : 700px;
+margin : 0 auto;
+text-align : center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="content content-title">
+<h1>SoundNet: Learning Sound<br>Representations from Unlabeled Video</h1>
+
+
+</div>
+
+<div class="content content-names">
+
+<p id="authors">
+<span><a href="http://people.csail.mit.edu/yusuf/">Yusuf Aytar</a> *</span>
+<span><a href="http://mit.edu/vondrick">Carl Vondrick</a> *</span>
+<span><a href="http://web.mit.edu/torralba/www/">Antonio Torralba</a></span>
+<br>
+Massachusetts Institute of Technology<br>
+NIPS 2016<br>
+<small>* contributed equally</small>
+</p>
+
+</div>
+
+<div class="content">
+
+
+<div style="float:right; width : 200px; text-align:center;">
+<a href="https://arxiv.org/pdf/1610.09001.pdf">
+<img src="paper.png"><br>
+<strong>Download Paper</strong>
+</a>
+</div>
+
+<h2>Abstract</h2>
+
+<p>
+We learn rich natural sound representations by capitalizing on large amounts of
+unlabeled sound data collected in the wild. We leverage the natural synchronization
+between vision and sound to learn an acoustic representation using two-million
+unlabeled videos. Unlabeled video has the advantage that it can be economically
+acquired at massive scales, yet contains useful signals about natural sound. We
+propose a student-teacher training procedure which transfers discriminative visual
+knowledge from well established visual recognition models into the sound modality
+using unlabeled video as a bridge. Our sound representation yields significant
+performance improvements over the state-of-the-art results on standard benchmarks
+for acoustic scene/object classification. Visualizations suggest some high-level
+semantics automatically emerge in the sound network, even though it is trained
+without ground truth labels.
+</p>
+
+<br clear="both">
+
+</div>
+
+
+
+
+<!--
+<div class="content">
+<h2>Convolutional Networks for Sound</h2>
+<p>We develop a deep convolutional network for sound recognition. This task has traditionally been challenging because acquiring large-scale training data is expensive. So, we instead supervise SoundNet by transferring knowledge from computer vision models and unlabeled video. Given a raw waveform, the network learns discriminative features for sound recognition.</p>
+<div style="text-align:center;">
+<img src='soundnet.jpg' width='75%'>
+</div>
+</div>
+-->
+
+
+<div class="content">
+<h2>Recognizing Objects and Scenes from Sound</h2>
+
+<p>Given a video, our model recognizes objects and scenes <strong>from sound only</strong>. Click the videos below to hear some of the sounds and our model's predictions. Red are scene categories, and blue are objects. Turn on your speakers!</p>
+<p>The images are shown only for visualization purpose, and not used in recognizing the sounds. We blurred the beginning of the video so you can try the task too and recognize it from sound alone.</p>
+
+<style>
+video { margin : 10px; cursor : pointer; border-radius : 10px;}
+.video-cnt div { display : inline-block; vertical-align : middle; }
+.video-cnt { text-align : center; }
+</style>
+<script>
+function bind_videos() {
+$('video').click(function(e) {
+e.stopPropagation();
+
+this.paused ? this.play() : this.pause();
+var sel = this;
+
+$('video').each(function() {
+if (this != sel) { this.pause(); this.currentTime = 0; }
+});
+
+$("audio").remove(); $('.snd').removeClass('playing');
+});
+}
+$(document).ready(function() {
+bind_videos();
+$(document).click(function() {
+$("video").each(function() { this.pause(); this.currentTime = 0; });
+});
+});
+</script>
+<div class='video-cnt'>
+
+<script>
+var files = [];
+files.push('11099403195')
+files.push('12507021004')
+files.push('12631402843')
+files.push('12788017203')
+files.push('14018658516')
+files.push('14315089223')
+files.push('14843539130')
+files.push('14911414556')
+files.push('16131969858')
+files.push('16301447177')
+files.push('17105335053')
+files.push('17210117201')
+files.push('18640634808')
+files.push('18900383232')
+files.push('21610103551')
+files.push('23119584166')
+files.push('23707977232')
+files.push('24636595003')
+files.push('2401184400')
+files.push('2405274000')
+files.push('2409280752')
+files.push('2413379532')
+files.push('2507084191')
+files.push('2534776256')
+files.push('2536872203')
+files.push('2568346227')
+files.push('2608658302')
+files.push('2615330935')
+files.push('2641283545')
+files.push('2704092227')
+files.push('2704551215')
+files.push('2736214361')
+files.push('2760118106')
+files.push('2804967855')
+files.push('2810340419')
+files.push('2942756847')
+files.push('3107872161')
+files.push('3209782123')
+files.push('3237358326')
+files.push('3239789032')
+files.push('3334594660')
+files.push('3404642166')
+files.push('3633647452')
+files.push('3745697162')
+files.push('3794623192')
+files.push('3812001254')
+files.push('3831967390')
+files.push('4102402950')
+files.push('4239641701')
+files.push('4342310363')
+files.push('4436848028')
+files.push('4509456201')
+files.push('4618727545')
+files.push('4634646485')
+files.push('4721752181')
+files.push('4803328135')
+files.push('4879201073')
+files.push('5201510473')
+files.push('5308382723')
+files.push('5342841118')
+files.push('5351440037')
+files.push('5543759077')
+files.push('5561790022')
+files.push('5711329115')
+files.push('5715611241')
+files.push('5738035917')
+files.push('5960300095')
+files.push('6030899215')
+files.push('6107865038')
+files.push('6143054816')
+files.push('6319304884')
+files.push('6818605026')
+files.push('6831601199')
+files.push('6836465897')
+files.push('6837382456')
+files.push('7444486428')
+files.push('7704333154')
+files.push('7742781538')
+files.push('8074997108')
+files.push('8143370422')
+files.push('8207491255')
+files.push('8305877632')
+files.push('8479608186')
+files.push('8502580774')
+files.push('8533243069')
+files.push('8683292072')
+files.push('8708759263')
+
+
+function shuffle(array) {
+let counter = array.length;
+
+// While there are elements in the array
+while (counter > 0) {
+// Pick a random index
+let index = Math.floor(Math.random() * counter);
+
+// Decrease counter by 1
+counter--;
+
+// And swap the last element with it
+let temp = array[counter];
+array[counter] = array[index];
+array[index] = temp;
+}
+
+return array;
+}
+
+function generate_videos() {
+shuffle(files);
+$("#video-dropbox").html('');
+//files.push("<div><video src='videos3/8708759263.mp4' poster='videos3/8708759263.jpg' playsinline width=235></video></div>");
+for (var i = 0; i < 3*4; i++) {
+$("#video-dropbox").append("<div><video src='videos3/" + files[i] + ".mp4' poster='videos3/" + files[i] + ".jpg' playsinline width=235></video></div>");
+}
+bind_videos();
+}
+
+$(document).ready(function() {
+generate_videos();
+});
+</script>
+
+<div id="video-dropbox" style='height : 770px;'></div>
+
+<br><br>
+<button onclick='generate_videos()' style='font-size : 20px;'>Show Me More Videos</button>
+
+</div>
+
+</div>
+
+
+
+
+
+<div class="content">
+<h2>Hearing the Hidden Representation</h2>
+
+<p>
+Although the network is trained without ground truth labels, it learns rich sound features. We visualize these features by finding sounds that maximally activate a particular hidden unit.
+Click the images below to hear what sounds activate that unit. <strong style='color:red;'>Turn on your speakers!</strong> You will hear the top 9 sounds that activate that unit.</p>
+
+<h3>Visualizing conv7</h3>
+
+<p>We visualize units in the deep layers in the network from <tt>conv7</tt>. Since we are deep in the network, sound detectors for high-level concepts can emerge automatically. Note the images are shown only for visualization purposes, and not used in analyzing the sounds.</p>
+
+
+<script>$(document).ready(function() {
+$('.snd-cnt').click(function(e){
+$('.snd').removeClass('playing');
+$(this).children('.snd').addClass('playing');
+$('audio').remove();
+$('body').append('<audio><source src="' + $(this).children('.snd').data('sound') +'" type="audio/mpeg"></audio>');
+e.stopPropagation();
+$("audio").bind("ended", function() { $(".snd").removeClass("playing"); }).get(0).play();
+
+$("video").each(function() { this.pause(); this.currentTime = 0; });
+});
+$(document).click(function() {
+$("audio").remove(); $('.snd').removeClass('playing');
+});
+});</script>
+<style>
+img.snd { cursor : pointer; border : 10px solid white; margin-bottom : 5px; border-radius : 25px; opacity:1;}
+.snd-cnt:hover .snd { border : 10px solid red !important; }
+.playing { border : 10px solid red !important; }
+.snd-cnt { text-align:center; width:168px; display:inline-block; margin : 10px; cursor : pointer;}
+.snd-small { width : 130px; }
+.snd-tiny { width : 90px; margin : 2px; }
+.mini-speaker {
+position : relative;
+top : 3px;
+}
+</style>
+<div style='text-align:center;'>
+<div class='snd-cnt'><img class=snd src='0128.jpg' data-sound=0128.mp3 width=158 height=158><br><img src='speaker.png' class='mini-speaker' width=20 height=20> Motor-like</div>
+<div class='snd-cnt'><img class=snd src='0126.jpg' data-sound=0126.mp3 width=158 height=158><br><img src='speaker.png' class='mini-speaker' width=20 height=20> Dog-like</div>
+<div class='snd-cnt'><img class=snd src='0659.jpg' data-sound=0659.mp3 width=158 height=158><br><img src='speaker.png' class='mini-speaker' width=20 height=20> Bird-like</div>
+<div class='snd-cnt'><img class=snd src='0037.jpg' data-sound=0037.mp3 width=158 height=158><br><img src='speaker.png' class='mini-speaker' width=20 height=20> Sports Chatter-like</div>
+<div class='snd-cnt'><img class=snd src='0113.jpg' data-sound=0113.mp3 width=158 height=158><br><img src='speaker.png' class='mini-speaker' width=20 height=20> Music-like</div>
+<div class='snd-cnt'><img class=snd src='0350.jpg' data-sound=0350.mp3 width=158 height=158><br><img src='speaker.png' class='mini-speaker' width=20 height=20> Marching Band-like</div>
+<div class='snd-cnt'><img class=snd src='0137.jpg' data-sound=0137.mp3 width=158 height=158><br><img src='speaker.png' class='mini-speaker' width=20 height=20> Fireworks-like</div>
+<div class='snd-cnt'><img class=snd src='0142.jpg' data-sound=0142.mp3 width=158 height=158><br><img src='speaker.png' class='mini-speaker' width=20 height=20> Underwater-like</div>
+<div class='snd-cnt'><img class=snd src='0139.jpg' data-sound=0139.mp3 width=158 height=158><br><img src='speaker.png' class='mini-speaker' width=20 height=20> Car-like</div>
+<div class='snd-cnt'><img class=snd src='0103.jpg' data-sound=0103.mp3 width=158 height=158><br><img src='speaker.png' class='mini-speaker' width=20 height=20> Parents-like</div>
+<div class='snd-cnt'><img class=snd src='0051.jpg' data-sound=0051.mp3 width=158 height=158><br><img src='speaker.png' class='mini-speaker' width=20 height=20> Water-like</div>
+<div class='snd-cnt'><img class=snd src='0745.jpg' data-sound=0745.mp3 width=158 height=158><br><img src='speaker.png' class='mini-speaker' width=20 height=20> Baby Talk-like</div>
+<div class='snd-cnt'><img class=snd src='0912.jpg' data-sound=0912.mp3 width=158 height=158><br><img src='speaker.png' class='mini-speaker' width=20 height=20> Race Car-like</div>
+<div class='snd-cnt'><img class=snd src='0028.jpg' data-sound=0028.mp3 width=158 height=158><br><img src='speaker.png' class='mini-speaker' width=20 height=20> Open Space-like</div>
+<div class='snd-cnt'><img class=snd src='0411.jpg' data-sound=0411.mp3 width=158 height=158><br><img src='speaker.png' class='mini-speaker' width=20 height=20> Talking-like</div>
+<div class='snd-cnt'><img class=snd src='0168.jpg' data-sound=0168.mp3 width=158 height=158><br><img src='speaker.png' class='mini-speaker' width=20 height=20> Cheering-like</div>
+
+</div>
+
+<h3>Visualizing conv5</h3>
+
+<p>We can also visualize middle layers in the network. Interestingly, detectors for mid-level concepts automatically emerge in <tt>conv5</tt>.</p>
+
+<div style='text-align:center;'>
+<div class='snd-cnt snd-small'><img class="snd" src='speaker' data-sound=conv5/0050.mp3 width=64 height=64><br>Tapping-like</div>
+<div class='snd-cnt snd-small'><img class="snd" src='speaker' data-sound=conv5/0060.mp3 width=64 height=64><br>Thumping-like</div>
+<div class='snd-cnt snd-small'><img class="snd" src='speaker' data-sound=conv5/0073.mp3 width=64 height=64><br>Yelling-like</div>
+<div class='snd-cnt snd-small'><img class="snd" src='speaker' data-sound=conv5/0094.mp3 width=64 height=64><br>Voice-like</div>
+<div class='snd-cnt snd-small'><img class="snd" src='speaker' data-sound=conv5/0015.mp3 width=64 height=64><br>Swooshing-like</div>
+<div class='snd-cnt snd-small'><img class="snd" src='speaker' data-sound=conv5/0117.mp3 width=64 height=64><br>Chiming-like</div>
+<div class='snd-cnt snd-small'><img class="snd" src='speaker' data-sound=conv5/0144.mp3 width=64 height=64><br>Smacking-like</div>
+<div class='snd-cnt snd-small'><img class="snd" src='speaker' data-sound=conv5/0146.mp3 width=64 height=64><br>Laughing-like</div>
+<div class='snd-cnt snd-small'><img class="snd" src='speaker' data-sound=conv5/0166.mp3 width=64 height=64><br>Music Tune-like</div>
+<div class='snd-cnt snd-small'><img class="snd" src='speaker' data-sound=conv5/0218.mp3 width=64 height=64><br>Clicking-like</div>
+</div>
+
+<h3>Visualizing conv1</h3>
+<p>We visualize the first layer of the network by looking at the learned weights of <tt>conv1</tt>, which you can see below. The network operates on raw waveforms, so the filters are in the time-domain.</p>
+
+<div style='text-align:center;'>
+<div class='snd-cnt snd-tiny'><img class="snd" src='conv1/6.jpg' data-sound=conv1/6.mp3 width=72 height=50></div>
+<div class='snd-cnt snd-tiny'><img class="snd" src='conv1/13.jpg' data-sound=conv1/13.mp3 width=72 height=50></div>
+<div class='snd-cnt snd-tiny'><img class="snd" src='conv1/1.jpg' data-sound=conv1/1.mp3 width=72 height=50></div>
+<div class='snd-cnt snd-tiny'><img class="snd" src='conv1/4.jpg' data-sound=conv1/4.mp3 width=72 height=50></div>
+<div class='snd-cnt snd-tiny'><img class="snd" src='conv1/2.jpg' data-sound=conv1/2.mp3 width=72 height=50></div>
+<div class='snd-cnt snd-tiny'><img class="snd" src='conv1/5.jpg' data-sound=conv1/5.mp3 width=72 height=50></div>
+<div class='snd-cnt snd-tiny'><img class="snd" src='conv1/9.jpg' data-sound=conv1/9.mp3 width=72 height=50></div>
+<div class='snd-cnt snd-tiny'><img class="snd" src='conv1/8.jpg' data-sound=conv1/8.mp3 width=72 height=50></div>
+<div class='snd-cnt snd-tiny'><img class="snd" src='conv1/3.jpg' data-sound=conv1/3.mp3 width=72 height=50></div>
+<div class='snd-cnt snd-tiny'><img class="snd" src='conv1/10.jpg' data-sound=conv1/10.mp3 width=72 height=50></div>
+<div class='snd-cnt snd-tiny'><img class="snd" src='conv1/12.jpg' data-sound=conv1/12.mp3 width=72 height=50></div>
+<div class='snd-cnt snd-tiny'><img class="snd" src='conv1/14.jpg' data-sound=conv1/14.mp3 width=72 height=50></div>
+<div class='snd-cnt snd-tiny'><img class="snd" src='conv1/15.jpg' data-sound=conv1/15.mp3 width=72 height=50></div>
+<div class='snd-cnt snd-tiny'><img class="snd" src='conv1/7.jpg' data-sound=conv1/7.mp3 width=72 height=50></div>
+<div class='snd-cnt snd-tiny'><img class="snd" src='conv1/11.jpg' data-sound=conv1/11.mp3 width=72 height=50></div>
+<div class='snd-cnt snd-tiny'><img class="snd" src='conv1/16.jpg' data-sound=conv1/16.mp3 width=72 height=50></div>
+</div>
+
+</div>
+
+
+
+
+<div class="content">
+<h2>Video Overview</h2>
+<div style='text-align:center;'>
+<iframe width="700" height="393" src="https://www.youtube.com/embed/yJCjVvIY4dU?rel=0&amp;showinfo=0" frameborder="0" allowfullscreenstyle='border-radius : 20px;'></iframe>
+</div>
+</div>
+
+
+<div class="content">
+<h2>Performance</h2>
+
+<p>We experiment with SoundNet features on several tasks. They generally advance the state-of-the-art in environmental sound recognition by over 10%. By leveraging millions of unconstrained videos, we can learn better sound features.</p>
+
+<table style='margin:0 auto;'>
+<tr>
+<td style='padding-right:20px;'><img src='dcase.png' height='140'></td>
+<td><img src='esc.png' height='170'></td>
+</tr>
+<tr>
+<th>DCASE</th>
+<th>ESC 10 and ESC 50</th>
+</tr>
+</table>
+
+<p>We also analyzed the performance of different components of our system. Our experiments suggest that one may obtain better performance
+simply by downloading more videos, creating deeper networks, and leveraging richer vision models.</p>
+
+<div style='text-align:center;'><img src='breakdown.png' width='500'></div>
+
+<p>Check out the <a href="https://arxiv.org/pdf/1610.09001.pdf">paper</a> for full details and more analysis.</p>
+
+</div>
+
+
+<div class="content">
+<h2>Code &amp; Trained Models</h2>
+<a href="https://github.com/cvondrick/soundnet"><img src="https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png" style="float:right; width:100px; margin-right:15px; margin-top:-25px; margin-bottom : 10px;"></a>
+
+
+<p>The code and models are available on Github and open source. It is implemented in Torch7. Using our pre-trained model, you can extract discriminative features for natural sound recognition. In our experiments, <tt>pool5</tt> seems to work the best with a linear SVM.</p>
+
+<ul>
+<li><a href="https://github.com/cvondrick/soundnet">Code on Github</a></li>
+<li><a href="http://data.csail.mit.edu/soundnet/soundnet_models_public.zip">Pretrained Models</a> (101 MB zip file)</li>
+</ul>
+
+<p>Using the code is easy in Torch7:</p>
+<p>
+<pre>
+sound = audio.load('file.mp3'):mul(2^-23):view(1,1,-1,1):cuda()
+predictions = net:forward(sound)
+</pre>
+</p>
+
+<p>SoundNet outputs two probability distributions of the categories that it recognizes for the input sounds. The first distribution are object categories, and the second distribution is scene categories. You can find the list of categories below:</p>
+<ul>
+<li><a href="http://data.csail.mit.edu/soundnet/categories/categories_imagenet.txt">Object Categories</a> (txt)</li>
+<li><a href="http://data.csail.mit.edu/soundnet/categories/categories_places2.txt">Scene Categories</a> (txt)</li>
+</ul>
+
+<p>Minor Note: SoundNet was trained with an older version of Places365. While Places365 will give good results, if you want to strictly reproduce our results, please use this <a href="http://soundnet.csail.mit.edu/vgg16_places2/">VGG16 model</a> that has 401 categories instead.</p>
+
+</div>
+
+<div class="content" id="data">
+<h2>Data</h2>
+
+<p>We are releasing our Flickr video dataset for cross-modal recognition. Using our dataset, you can train large-scale sound recognition models. To train SoundNet, you need the raw MP3s and the image features. Optionally, you can download the original frames.</p>
+
+<ul>
+<li><a href="http://data.csail.mit.edu/soundnet/mp3_public.tar.gz">MP3s</a> (359 GB)</li>
+<li><a href="http://data.csail.mit.edu/soundnet/image_features_public.tar.gz">Image Features</a> (88 GB)</li>
+<li><a href="http://data.csail.mit.edu/soundnet/frames_public.tar.gz">Frames</a> (62 GB)</li>
+<li><a href="http://data.csail.mit.edu/soundnet/urls_public.txt">List of URLs of Videos</a> (150 MB)</li>
+<li><a href="http://data.csail.mit.edu/soundnet/lists_public.tar.gz">Lists of Videos and Train/Val Split</a> (84 MB)</li>
+</ul>
+
+<p>Videos from "Videos1" are part of the <a
+href="https://webscope.sandbox.yahoo.com/catalog.php?datatype=i&did=67">Yahoo
+Flickr Creative Commons Dataset</a>. Videos from "Videos2" are downloaded by
+querying Flickr for common tags and English words. There should be no
+overlap.</p>
+
+<p>If you use this data in your research project, please cite <a
+href="https://webscope.sandbox.yahoo.com/catalog.php?datatype=i&did=67">the
+Yahoo dataset</a> and our paper.</p>
+
+<p>We also release re-packaged versions of DCASE 2014 and ESC-50, which you can download <a href="http://data.csail.mit.edu/soundnet/data_prepro.zip">here</a>. These are the same as the original datasets, but converted to MP3 for easier processing. Please cite the DCASE and ESC-50 papers if you use this download.</p>
+
+<p>Below are some sample scenes in this dataset:</p>
+
+<img src='dataset.png' width='100%'>
+
+</div>
+
+<div class="content">
+<h2>Bibtex</h2>
+
+<p>If you find this project useful in your research, please cite:</p>
+
+<p>Yusuf Aytar, Carl Vondrick, and Antonio Torralba. "Soundnet: Learning sound representations from unlabeled video." Advances in Neural Information Processing Systems. 2016.<p>
+
+<pre>
+@inproceedings{aytar2016soundnet,
+title={Soundnet: Learning sound representations from unlabeled video},
+author={Aytar, Yusuf and Vondrick, Carl and Torralba, Antonio},
+booktitle={Advances in Neural Information Processing Systems},
+year={2016}
+}
+</pre>
+
+</div>
+
+
+
+<div class="content">
+<h2>Related Work</h2>
+
+<p>Cross-modal learning and perception is an exciting area of research! Check out some related work below:</p>
+
+<ul>
+<li><a href="https://arxiv.org/abs/1609.09430">CNN Architectures for Large-Scale Audio Classification</a><br>
+by Hershey et al (arXiv 2016)</li>
+
+<li><a href="http://vis.csail.mit.edu/">Visually Indicated Sounds</a><br>
+by Owens et al (CVPR 2016)</li>
+
+<li><a href="https://people.csail.mit.edu/khosla/papers/icml2011_ngiam.pdf">Multimodal Deep Learning</a><br>
+by Ngiam et al (ICML 2011)</li>
+
+<li><a href="http://benanne.github.io/2014/08/05/spotify-cnns.html">Recommending music on Spotify with deep learning</a><br>
+by Dieleman et al (NIPS 2013)</li>
+
+<li><a href="https://arxiv.org/abs/1507.00448">Cross Modal Distillation for Supervision Transfer</a><br>
+by Gupta et al (CVPR 2016)</li>
+</ul>
+
+</div>
+
+<div class="content">
+<h2>Acknowledgements</h2>
+
+<p>We thank MIT TIG, especially Garrett Wollman, for helping store 26 TB of
+video. We are grateful for the GPUs donated by NVidia. This work was supported by NSF grant
+#1524817 to AT and the Google PhD fellowship to CV.
+</div>
+
+</body>
+</html>
