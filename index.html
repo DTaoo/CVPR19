@@ -1,7 +1,7 @@
 
 <html>
 <head>
-<title>Listen to Image - MIT</title>
+<title>Listen to Image</title>
 <meta name="google-site-verification" content="NksNPfO4SApMtvU2rGHxr4DPan2Uy6Pz-rP9cA0k1mg" />
 <script src='https://code.jquery.com/jquery-2.2.0.min.js'></script>
 
@@ -131,7 +131,7 @@ text-align : center;
 <body>
 
 <div class="content content-title">
-<h1>SoundNet: Learning Sound<br>Representations from Unlabeled Video</h1>
+<h1>Listen to the Image</h1>
 
 
 </div>
@@ -139,13 +139,14 @@ text-align : center;
 <div class="content content-names">
 
 <p id="authors">
-<span><a href="http://people.csail.mit.edu/yusuf/">Yusuf Aytar</a> *</span>
-<span><a href="http://mit.edu/vondrick">Carl Vondrick</a> *</span>
-<span><a href="http://web.mit.edu/torralba/www/">Antonio Torralba</a></span>
+<span><a href="https://dtaoo.github.io">Di Hu</a> </span>
+<span><a href="https://redwang.github.io/">Dong Wang</a> *
+<span><a href="https://scholar.google.com.hk/citations?user=ahUibskAAAAJ&hl=zh-CN">Xuelong Li</a></span>
+<span><a href="http://www.escience.cn/people/fpnie">Feiping Nie</a></span>
+<span><a href="http://crabwq.github.io/">Qi Wang</a></span>
 <br>
-Massachusetts Institute of Technology<br>
-NIPS 2016<br>
-<small>* contributed equally</small>
+Northwestern Polytechnical University<br>
+CVPR 2019<br>
 </p>
 
 </div>
@@ -153,9 +154,9 @@ NIPS 2016<br>
 <div class="content">
 
 
-<div style="float:right; width : 200px; text-align:center;">
-<a href="https://arxiv.org/pdf/1610.09001.pdf">
-<img src="paper.png"><br>
+<div style="float:right; width :250px; text-align:justify;">
+<a href="https://dtaoo.github.io/papers/2019_voice.pdf">
+<img src="ims/paper.jpg" height="300px"><br>
 <strong>Download Paper</strong>
 </a>
 </div>
@@ -163,210 +164,22 @@ NIPS 2016<br>
 <h2>Abstract</h2>
 
 <p>
-We learn rich natural sound representations by capitalizing on large amounts of
-unlabeled sound data collected in the wild. We leverage the natural synchronization
-between vision and sound to learn an acoustic representation using two-million
-unlabeled videos. Unlabeled video has the advantage that it can be economically
-acquired at massive scales, yet contains useful signals about natural sound. We
-propose a student-teacher training procedure which transfers discriminative visual
-knowledge from well established visual recognition models into the sound modality
-using unlabeled video as a bridge. Our sound representation yields significant
-performance improvements over the state-of-the-art results on standard benchmarks
-for acoustic scene/object classification. Visualizations suggest some high-level
-semantics automatically emerge in the sound network, even though it is trained
-without ground truth labels.
+Visual-to-auditory sensory substitution devices can assist the blind in sensing the visual environment by translating
+the visual information into a sound pattern. To improve the translation quality, the task performances of the blind are usually employed to evaluate different encoding schemes. <strong>In contrast to the toilsome human-based assessment, we argue that machine model can be also developed for evaluation, and more efficient</strong>. To this end, we firstly propose two distinct cross-modal perception model w.r.t. the late-blind and congenitally-blind cases, which aim to generate concrete visual contents based on the translated sound. To validate the functionality of proposed models, two novel optimization strategies w.r.t. the primary encoding scheme are presented. Further, we conduct sets of humanbased experiments to evaluate and compare them with the conducted machine-based assessments in the cross-modal generation task. Their highly consistent results w.r.t. different encoding schemes indicate that using machine model to accelerate optimization evaluation and reduce experimental cost is feasible to some extent, <strong>which could dramatically promote the upgrading of encoding scheme then help the blind to improve their visual perception ability.</strong>
 </p>
-
 <br clear="both">
-
 </div>
-
-
-
-
-<!--
-<div class="content">
-<h2>Convolutional Networks for Sound</h2>
-<p>We develop a deep convolutional network for sound recognition. This task has traditionally been challenging because acquiring large-scale training data is expensive. So, we instead supervise SoundNet by transferring knowledge from computer vision models and unlabeled video. Given a raw waveform, the network learns discriminative features for sound recognition.</p>
-<div style="text-align:center;">
-<img src='soundnet.jpg' width='75%'>
-</div>
-</div>
--->
 
 
 <div class="content">
-<h2>Recognizing Objects and Scenes from Sound</h2>
+<h2>Sensory Substitution for the Blind</h2>
 
-<p>Given a video, our model recognizes objects and scenes <strong>from sound only</strong>. Click the videos below to hear some of the sounds and our model's predictions. Red are scene categories, and blue are objects. Turn on your speakers!</p>
-<p>The images are shown only for visualization purpose, and not used in recognizing the sounds. We blurred the beginning of the video so you can try the task too and recognize it from sound alone.</p>
+<div style='text-align:center;'><img src='ims/blind.jpg' width='500'></div>
 
-<style>
-video { margin : 10px; cursor : pointer; border-radius : 10px;}
-.video-cnt div { display : inline-block; vertical-align : middle; }
-.video-cnt { text-align : center; }
-</style>
-<script>
-function bind_videos() {
-$('video').click(function(e) {
-e.stopPropagation();
-
-this.paused ? this.play() : this.pause();
-var sel = this;
-
-$('video').each(function() {
-if (this != sel) { this.pause(); this.currentTime = 0; }
-});
-
-$("audio").remove(); $('.snd').removeClass('playing');
-});
-}
-$(document).ready(function() {
-bind_videos();
-$(document).click(function() {
-$("video").each(function() { this.pause(); this.currentTime = 0; });
-});
-});
-</script>
-<div class='video-cnt'>
-
-<script>
-var files = [];
-files.push('11099403195')
-files.push('12507021004')
-files.push('12631402843')
-files.push('12788017203')
-files.push('14018658516')
-files.push('14315089223')
-files.push('14843539130')
-files.push('14911414556')
-files.push('16131969858')
-files.push('16301447177')
-files.push('17105335053')
-files.push('17210117201')
-files.push('18640634808')
-files.push('18900383232')
-files.push('21610103551')
-files.push('23119584166')
-files.push('23707977232')
-files.push('24636595003')
-files.push('2401184400')
-files.push('2405274000')
-files.push('2409280752')
-files.push('2413379532')
-files.push('2507084191')
-files.push('2534776256')
-files.push('2536872203')
-files.push('2568346227')
-files.push('2608658302')
-files.push('2615330935')
-files.push('2641283545')
-files.push('2704092227')
-files.push('2704551215')
-files.push('2736214361')
-files.push('2760118106')
-files.push('2804967855')
-files.push('2810340419')
-files.push('2942756847')
-files.push('3107872161')
-files.push('3209782123')
-files.push('3237358326')
-files.push('3239789032')
-files.push('3334594660')
-files.push('3404642166')
-files.push('3633647452')
-files.push('3745697162')
-files.push('3794623192')
-files.push('3812001254')
-files.push('3831967390')
-files.push('4102402950')
-files.push('4239641701')
-files.push('4342310363')
-files.push('4436848028')
-files.push('4509456201')
-files.push('4618727545')
-files.push('4634646485')
-files.push('4721752181')
-files.push('4803328135')
-files.push('4879201073')
-files.push('5201510473')
-files.push('5308382723')
-files.push('5342841118')
-files.push('5351440037')
-files.push('5543759077')
-files.push('5561790022')
-files.push('5711329115')
-files.push('5715611241')
-files.push('5738035917')
-files.push('5960300095')
-files.push('6030899215')
-files.push('6107865038')
-files.push('6143054816')
-files.push('6319304884')
-files.push('6818605026')
-files.push('6831601199')
-files.push('6836465897')
-files.push('6837382456')
-files.push('7444486428')
-files.push('7704333154')
-files.push('7742781538')
-files.push('8074997108')
-files.push('8143370422')
-files.push('8207491255')
-files.push('8305877632')
-files.push('8479608186')
-files.push('8502580774')
-files.push('8533243069')
-files.push('8683292072')
-files.push('8708759263')
-
-
-function shuffle(array) {
-let counter = array.length;
-
-// While there are elements in the array
-while (counter > 0) {
-// Pick a random index
-let index = Math.floor(Math.random() * counter);
-
-// Decrease counter by 1
-counter--;
-
-// And swap the last element with it
-let temp = array[counter];
-array[counter] = array[index];
-array[index] = temp;
-}
-
-return array;
-}
-
-function generate_videos() {
-shuffle(files);
-$("#video-dropbox").html('');
-//files.push("<div><video src='videos3/8708759263.mp4' poster='videos3/8708759263.jpg' playsinline width=235></video></div>");
-for (var i = 0; i < 3*4; i++) {
-$("#video-dropbox").append("<div><video src='videos3/" + files[i] + ".mp4' poster='videos3/" + files[i] + ".jpg' playsinline width=235></video></div>");
-}
-bind_videos();
-}
-
-$(document).ready(function() {
-generate_videos();
-});
-</script>
-
-<div id="video-dropbox" style='height : 770px;'></div>
-
-<br><br>
-<button onclick='generate_videos()' style='font-size : 20px;'>Show Me More Videos</button>
+<p>There are millions of blind people all over the world, how to help them to “re-see” the outside world is a significant but challenging task. According to the theory of cross-modal plasticity, it becomes possible to use other organs (e.g., ears) as the sensor to “visually” perceive the environment. Hence, in the past decades, there have been several projects attempting to help the disabled to recover their lost senses via other sensory channels, and the relevant equipments are usually named as <strong>Sensory Substitution (SS)</strong> devices. And the well-deployed one is the visual-to-auditory SS device of vOICe. After 10-15 hours of training, <strong>the regions of visual cortex become active</strong> due to cross-modal plasticity.
+ </p>
 
 </div>
-
-</div>
-
-
-
 
 
 <div class="content">
@@ -536,77 +349,50 @@ predictions = net:forward(sound)
 
 </div>
 
+
 <div class="content" id="data">
 <h2>Data</h2>
 
-<p>We are releasing our Flickr video dataset for cross-modal recognition. Using our dataset, you can train large-scale sound recognition models. To train SoundNet, you need the raw MP3s and the image features. Optionally, you can download the original frames.</p>
+<p>Three-paired image datasets are considered for imitating the visual environment, from the complex background (CIFAR-10 and ImageNet) to the simple black background (COIL-20).</p>
 
 <ul>
-<li><a href="http://data.csail.mit.edu/soundnet/mp3_public.tar.gz">MP3s</a> (359 GB)</li>
-<li><a href="http://data.csail.mit.edu/soundnet/image_features_public.tar.gz">Image Features</a> (88 GB)</li>
-<li><a href="http://data.csail.mit.edu/soundnet/frames_public.tar.gz">Frames</a> (62 GB)</li>
-<li><a href="http://data.csail.mit.edu/soundnet/urls_public.txt">List of URLs of Videos</a> (150 MB)</li>
-<li><a href="http://data.csail.mit.edu/soundnet/lists_public.tar.gz">Lists of Videos and Train/Val Split</a> (84 MB)</li>
+<li> Complex visual environment:
+	<a href="https://www.cs.toronto.edu/~kriz/cifar.html">CIFAR-10</a>
+    <a href="http://www.image-net.org/">ImageNet</a>
+</li> 
+<li> Simple handwritten digits:
+	<a href="http://data.csail.mit.edu/soundnet/image_features_public.tar.gz">MNIST</a>
+    <a href="https://www.nist.gov/itl/iad/image-group/emnist-dataset">EMNIST</a>
+</li>
+<li> Realistic SS training environment:
+	<a href="http://www1.cs.columbia.edu/CAVE/software/softlib/coil-20.php">COIL-20</a>
+</li>
+
 </ul>
 
-<p>Videos from "Videos1" are part of the <a
-href="https://webscope.sandbox.yahoo.com/catalog.php?datatype=i&did=67">Yahoo
-Flickr Creative Commons Dataset</a>. Videos from "Videos2" are downloaded by
-querying Flickr for common tags and English words. There should be no
-overlap.</p>
-
-<p>If you use this data in your research project, please cite <a
-href="https://webscope.sandbox.yahoo.com/catalog.php?datatype=i&did=67">the
-Yahoo dataset</a> and our paper.</p>
-
-<p>We also release re-packaged versions of DCASE 2014 and ESC-50, which you can download <a href="http://data.csail.mit.edu/soundnet/data_prepro.zip">here</a>. These are the same as the original datasets, but converted to MP3 for easier processing. Please cite the DCASE and ESC-50 papers if you use this download.</p>
-
-<p>Below are some sample scenes in this dataset:</p>
-
-<img src='dataset.png' width='100%'>
-
-</div>
-
-<div class="content">
-<h2>Bibtex</h2>
-
-<p>If you find this project useful in your research, please cite:</p>
-
-<p>Yusuf Aytar, Carl Vondrick, and Antonio Torralba. "Soundnet: Learning sound representations from unlabeled video." Advances in Neural Information Processing Systems. 2016.<p>
-
-<pre>
-@inproceedings{aytar2016soundnet,
-title={Soundnet: Learning sound representations from unlabeled video},
-author={Aytar, Yusuf and Vondrick, Carl and Torralba, Antonio},
-booktitle={Advances in Neural Information Processing Systems},
-year={2016}
-}
-</pre>
+<p>The sound of the images in these datasets can be directedly generated by using the released encoding schemes above.</p>
 
 </div>
 
 
 
 <div class="content">
-<h2>Related Work</h2>
+<h2>Reference</h2>
 
-<p>Cross-modal learning and perception is an exciting area of research! Check out some related work below:</p>
+<p> Machine cross-modal perception is an exciting area of research but has just set sail! Check out some related work in Cognitive Science below:</p>
 
 <ul>
-<li><a href="https://arxiv.org/abs/1609.09430">CNN Architectures for Large-Scale Audio Classification</a><br>
-by Hershey et al (arXiv 2016)</li>
+<li><a href="https://www.seeingwithsound.com/">The vOICe Sensory Substitution Device</a><br></li>
 
-<li><a href="http://vis.csail.mit.edu/">Visually Indicated Sounds</a><br>
-by Owens et al (CVPR 2016)</li>
+<li><a href="https://content.iospress.com/articles/restorative-neurology-and-neuroscience/rnn160647">Designing sensory-substitution devices: Principles, pitfalls and potential</a><br>
+by Kristja´nsson et al (CVPR 2016)</li>
 
-<li><a href="https://people.csail.mit.edu/khosla/papers/icml2011_ngiam.pdf">Multimodal Deep Learning</a><br>
-by Ngiam et al (ICML 2011)</li>
+<li><a href="https://www.nature.com/articles/srep15628">Auditory sensory substitution is intuitive and automatic with texture stimuli</a><br>
+by Stiles et al</li>
 
-<li><a href="http://benanne.github.io/2014/08/05/spotify-cnns.html">Recommending music on Spotify with deep learning</a><br>
-by Dieleman et al (NIPS 2013)</li>
+<li><a href="https://www.sciencedirect.com/science/article/pii/S0149763412001200">Sensory substitution as an artificially acquired synaesthesia</a><br>
+by Ward et al</li>
 
-<li><a href="https://arxiv.org/abs/1507.00448">Cross Modal Distillation for Supervision Transfer</a><br>
-by Gupta et al (CVPR 2016)</li>
 </ul>
 
 </div>
@@ -614,9 +400,7 @@ by Gupta et al (CVPR 2016)</li>
 <div class="content">
 <h2>Acknowledgements</h2>
 
-<p>We thank MIT TIG, especially Garrett Wollman, for helping store 26 TB of
-video. We are grateful for the GPUs donated by NVidia. This work was supported by NSF grant
-#1524817 to AT and the Google PhD fellowship to CV.
+<p>We thank our lab colleagues for conducting the Sensory Substitution Tests. This work was supported in part by the National Natural Science Foundation of China grant under number 61772427, 61751202, U1864204 and 61773316, Natural Science Foundation of Shaanxi Province under Grant 2018KJXX-024, and Project of Special Zone for National Defense Science and Technology Innovation.
 </div>
 
 </body>
